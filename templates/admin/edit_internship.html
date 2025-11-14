@@ -1,0 +1,163 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}Edit Internship - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="page-header mb-4">
+    <h1 class="page-title">Edit Internship</h1>
+    <p class="page-subtitle">Update internship details and settings</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Internship Details</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit_internship', id=internship.id) }}">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="title" class="form-label">Internship Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ internship.title }}" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="location" class="form-label">Location *</label>
+                            <input type="text" class="form-control" id="location" name="location" value="{{ internship.location }}" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="location_type" class="form-label">Work Type *</label>
+                            <select class="form-select" id="location_type" name="location_type" required>
+                                <option value="remote" {% if internship.location_type == 'remote' %}selected{% endif %}>Remote</option>
+                                <option value="onsite" {% if internship.location_type == 'onsite' %}selected{% endif %}>On-site</option>
+                                <option value="hybrid" {% if internship.location_type == 'hybrid' %}selected{% endif %}>Hybrid</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label for="duration" class="form-label">Duration</label>
+                            <input type="text" class="form-control" id="duration" name="duration" value="{{ internship.duration or '' }}">
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label for="stipend" class="form-label">Stipend</label>
+                            <input type="text" class="form-control" id="stipend" name="stipend" value="{{ internship.stipend or '' }}">
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label for="deadline" class="form-label">Application Deadline *</label>
+                            <input type="date" class="form-control" id="deadline" name="deadline" value="{{ internship.deadline.strftime('%Y-%m-%d') }}" required>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="description" class="form-label">Description *</label>
+                            <textarea class="form-control" id="description" name="description" rows="6" required>{{ internship.description }}</textarea>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="skills" class="form-label">Required Skills *</label>
+                            <textarea class="form-control" id="skills" name="skills" rows="3" required>{{ internship.skills }}</textarea>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" {% if internship.is_active %}checked{% endif %}>
+                                <label class="form-check-label" for="is_active">
+                                    Active (visible to applicants)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="d-flex gap-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Save Changes
+                                </button>
+                                <a href="{{ url_for('admin_internships') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                                <button type="button" class="btn btn-outline-danger ms-auto" onclick="deleteInternship()">
+                                    <i class="fas fa-trash me-2"></i>Delete Internship
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3 pb-3 border-bottom border-secondary">
+                    <span style="color: var(--text-secondary);">Total Applications</span>
+                    <strong style="color: var(--primary);">{{ internship.applicants|length }}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-3 pb-3 border-bottom border-secondary">
+                    <span style="color: var(--text-secondary);">Pending Review</span>
+                    <strong style="color: var(--warning);">{{ internship.applicants|selectattr('status', 'equalto', 'pending')|list|length }}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-3 pb-3 border-bottom border-secondary">
+                    <span style="color: var(--text-secondary);">Shortlisted</span>
+                    <strong style="color: var(--success);">{{ internship.applicants|selectattr('status', 'equalto', 'shortlisted')|list|length }}</strong>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span style="color: var(--text-secondary);">Posted On</span>
+                    <strong>{{ internship.created_at.strftime('%b %d, %Y') }}</strong>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-link me-2"></i>Quick Links</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('internship_detail', slug=internship.slug) }}" class="btn btn-outline-primary w-100 mb-2" target="_blank">
+                    <i class="fas fa-external-link-alt me-2"></i>View Public Page
+                </a>
+                <a href="{{ url_for('admin_applicants', internship=internship.id) }}" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-users me-2"></i>View Applicants
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background: var(--dark-card); border: 1px solid var(--dark-border);">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter: invert(1);"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this internship? This action cannot be undone and will also delete all {{ internship.applicants|length }} associated applications.</p>
+            </div>
+            <div class="modal-footer border-top border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="POST" action="{{ url_for('delete_internship', id=internship.id) }}" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete Permanently</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function deleteInternship() {
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+    }
+</script>
+{% endblock %}

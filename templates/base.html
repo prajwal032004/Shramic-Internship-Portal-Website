@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="{% block meta_description %}{{ settings.tagline }} - Find the best internship opportunities at {{ settings.company_name }}{% endblock %}">
+    <meta name="keywords" content="internships, careers, jobs, {{ settings.company_name }},shramic,shramicintership,shramicconnect,shramicintern">
+    <meta name="author" content="{{ settings.company_name }}">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title"
+        content="{% block og_title %}{{ settings.company_name }} - {{ settings.tagline }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ settings.tagline }}{% endblock %}">
+    <meta property="og:image"
+        content="{% block og_image %}{{ url_for('static', filename='img/logo.png', _external=True) }}{% endblock %}">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:type" content="website">
+    <meta name="google-site-verification" content="2SS8VhyWNM9iG9iKxuAhMT_PkqVKJkS5fTs_HXs761Y" />
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ settings.company_name }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ settings.tagline }}{% endblock %}">
+
+    <title>{% block title %}{{ settings.company_name }} - {{ settings.tagline }}{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --cream: #FFF8F0;
+            --cream-dark: #F5EBE0;
+            --primary: #2C3E50;
+            --secondary: #E67E22;
+            --accent: #D4A574;
+            --text-dark: #2C3E50;
+            --text-light: #6C757D;
+            --success: #27AE60;
+            --danger: #E74C3C;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary) !important;
+        }
+
+        .navbar-brand img {
+            height: 45px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover img {
+            transform: scale(1.05);
+        }
+
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 70%;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            border: 2px solid var(--secondary);
+            color: var(--white);
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
+        }
+
+        /* Footer Styles */
+        footer {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a252f 100%);
+            color: var(--white);
+            padding: 4rem 0 1.5rem;
+            margin-top: 5rem;
+        }
+
+        footer h5 {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        footer h5::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        footer a:hover {
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+            padding-left: 0;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Flash Messages */
+        .alert {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            background-color: var(--white);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Utility Classes */
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+
+            .navbar-brand img {
+                height: 35px;
+            }
+        }
+        .contact-info p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.contact-info i {
+    margin-right: 0.5rem;
+    font-size: 1rem; /* optional: adjust size */
+    line-height: 1;
+}
+@media (max-width: 768px) {
+    /* Typography adjustments */
+    body {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    h6 {
+        font-size: 0.9rem;
+    }
+
+    /* Section titles */
+    .section-title {
+        font-size: 1.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .section-title::after {
+        width: 40px;
+        height: 3px;
+        bottom: -8px;
+    }
+
+    .section-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Navbar */
+    .navbar {
+        padding: 0.75rem 0;
+    }
+
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+
+    .navbar-brand img {
+        height: 32px;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem !important;
+        margin: 0.2rem 0;
+    }
+
+    /* Buttons */
+    .btn-primary,
+    .btn-outline-primary {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.85rem;
+    }
+
+    /* Cards */
+    .card {
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .card-text {
+        font-size: 0.85rem;
+    }
+
+    /* Footer */
+    footer {
+        padding: 3rem 0 1rem;
+        margin-top: 3rem;
+        font-size: 0.85rem;
+    }
+
+    footer h5 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    footer h5::after {
+        width: 35px;
+        height: 2px;
+    }
+
+    footer a {
+        font-size: 0.85rem;
+        margin-bottom: 0.4rem;
+    }
+
+    footer p {
+        font-size: 0.85rem;
+    }
+
+    .social-links a {
+        width: 35px;
+        height: 35px;
+        font-size: 0.85rem;
+    }
+
+    .footer-bottom {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        font-size: 0.75rem;
+    }
+
+    /* Contact info */
+    .contact-info p {
+        font-size: 0.85rem;
+    }
+
+    .contact-info i {
+        font-size: 0.85rem;
+    }
+
+    /* Alerts */
+    .alert {
+        font-size: 0.85rem;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+    }
+
+    /* Spacing adjustments */
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .mt-4 {
+        margin-top: 1rem !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 1rem !important;
+    }
+}
+
+/* Extra small devices (phones in portrait, less than 576px) */
+@media (max-width: 576px) {
+    body {
+        font-size: 13px;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
+    .navbar-brand img {
+        height: 28px;
+    }
+
+    .btn-primary,
+    .btn-outline-primary {
+        padding: 0.45rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    footer {
+        font-size: 0.8rem;
+    }
+
+    footer h5 {
+        font-size: 0.95rem;
+    }
+
+    .footer-bottom {
+        font-size: 0.7rem;
+    }
+}
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src="{{ settings.logo_url }}" alt="{{ settings.company_name }} Logo">
+                <span>{{ settings.company_name }}</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}"
+                            href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'internships' %}active{% endif %}"
+                            href="{{ url_for('internships') }}">Internships</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}"
+                            href="{{ url_for('contact') }}">Contact</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-primary btn-sm" href="{{ url_for('internships') }}">
+                            <i class="fas fa-briefcase me-2"></i>Apply Now
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container mt-4">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {% if category == 'success' %}
+            <i class="fas fa-check-circle me-2"></i>
+            {% elif category == 'danger' %}
+            <i class="fas fa-exclamation-circle me-2"></i>
+            {% elif category == 'warning' %}
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {% else %}
+            <i class="fas fa-info-circle me-2"></i>
+            {% endif %}
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ settings.logo_url }}" alt="{{ settings.company_name }}"
+                            style="height: 50px; margin-right: 15px;">
+                        <h5 class="mb-0">{{ settings.company_name }}</h5>
+                    </div>
+                    <p style="color: rgba(255,255,255,0.8);">{{ settings.tagline }}</p>
+                    <div class="social-links mt-3">
+                        {% if settings.social_linkedin %}
+                        <a href="{{ settings.social_linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        {% endif %}
+                        {% if settings.social_twitter %}
+                        <a href="{{ settings.social_twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                        {% endif %}
+                        {% if settings.social_facebook %}
+                        <a href="{{ settings.social_facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        {% endif %}
+                        <a href="https://www.instagram.com/shramic.info"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <a href="https://shramik.pythonanywhere.com">Community </a>
+                    <a href="{{ url_for('index') }}">Home</a>
+                    <a href="{{ url_for('internships') }}">Internships</a>
+                    <a href="{{ url_for('contact') }}">Contact Us</a>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>For Candidates</h5>
+                    <a href="{{ url_for('internships') }}">Browse Internships</a>
+                    <a href="{{ url_for('internships') }}">Apply Online</a>
+                    <a href="https://agriconnect1.pythonanywhere.com">Social Media</a>
+                    <a href="https://shramik.pythonanywhere.com/faq">FAQ</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4 contact-info">
+                    <h5>Contact Info</h5>
+
+                    {% if settings.contact_email %}
+                    <p>
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:{{ settings.contact_email }}" class="text-white text-decoration-none">
+                            {{ settings.contact_email }}
+                        </a>
+                    </p>
+                    {% endif %}
+
+                    {% if settings.contact_phone %}
+                    <p>
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:{{ settings.contact_phone }}" class="text-white text-decoration-none">
+                            {{ settings.contact_phone }}
+                        </a>
+                    </p>
+                    {% endif %}
+
+                    <p>
+                        <i class="fas fa-map-marker-alt"></i>
+                        Bengaluru, Karnataka, India
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 {{ settings.company_name }}. All rights reserved. | Built with <i
+                        class="fas fa-heart" style="color: #ff1100;"></i> for aspiring professionals</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function (alert) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

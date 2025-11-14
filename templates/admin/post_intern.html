@@ -1,0 +1,140 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}Post Internship - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="page-header mb-4">
+    <h1 class="page-title">Post New Internship</h1>
+    <p class="page-subtitle">Create a new internship opportunity to attract talented candidates</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Internship Details</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('post_intern') }}">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="title" class="form-label">Internship Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" required style="color: antiquewhite;" placeholder="e.g., Full Stack Development Internship">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="location" class="form-label">Location *</label>
+                            <input type="text" class="form-control" id="location" name="location" required placeholder="e.g., Mumbai, India">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="location_type" class="form-label">Work Type *</label>
+                            <select class="form-select" id="location_type" name="location_type" required>
+                                <option value="remote">Remote</option>
+                                <option value="onsite">On-site</option>
+                                <option value="hybrid">Hybrid</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label for="duration" class="form-label">Duration</label>
+                            <input type="text" class="form-control" id="duration" name="duration" placeholder="e.g., 3 months">
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label for="stipend" class="form-label">Stipend</label>
+                            <input type="text" class="form-control" id="stipend" name="stipend" placeholder="e.g., ₹15,000/month">
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label for="deadline" class="form-label">Application Deadline *</label>
+                            <input type="date" class="form-control" id="deadline" name="deadline" required>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="description" class="form-label">Description *</label>
+                            <textarea class="form-control" id="description" name="description" rows="6" required placeholder="Describe the internship role, responsibilities, and what the candidate will learn..."></textarea>
+                            <small class="text-muted">Provide a detailed description of the internship opportunity</small>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="skills" class="form-label">Required Skills *</label>
+                            <textarea class="form-control" id="skills" name="skills" rows="3" required placeholder="e.g., JavaScript, React, Node.js, MongoDB"></textarea>
+                            <small class="text-muted">Comma-separated list of required skills</small>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="d-flex gap-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane me-2"></i>Post Internship
+                                </button>
+                                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Tips</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Writing Tips:</strong>
+                    <ul class="mb-0 mt-2 ps-3">
+                        <li>Be clear and specific about responsibilities</li>
+                        <li>Highlight learning opportunities</li>
+                        <li>Mention team culture and benefits</li>
+                        <li>Use bullet points for readability</li>
+                        <li>Include growth potential</li>
+                    </ul>
+                </div>
+                
+                <div class="mt-3 p-3" style="background: var(--dark-surface); border-radius: 8px; border-left: 4px solid var(--primary);">
+                    <h6 style="color: var(--primary);"><i class="fas fa-lightbulb me-2"></i>Best Practices</h6>
+                    <small style="color: var(--text-secondary);">
+                        • Set realistic deadlines<br>
+                        • Offer competitive stipends<br>
+                        • Be transparent about expectations<br>
+                        • Respond to applicants promptly
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    input::placeholder,
+textarea::placeholder {
+  color: white;
+  opacity: 1; /* Ensures full visibility in some browsers */
+}
+
+/* Optional: Style the input background to contrast the white text */
+input,
+textarea {
+  background-color: #222; /* dark background for visibility */
+  color: white; /* makes typed text white as well */
+  border: 1px solid #555;
+  padding: 10px;
+  border-radius: 5px;
+}
+::-webkit-input-placeholder { color: white; } /* Chrome, Safari, Edge */
+:-ms-input-placeholder { color: white; }     /* Internet Explorer 10-11 */
+::-ms-input-placeholder { color: white; }    /* Microsoft Edge Legacy */
+::placeholder { color: white; }              /* Standard syntax */
+
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('deadline').min = new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}

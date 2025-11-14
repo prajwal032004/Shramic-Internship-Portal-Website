@@ -1,0 +1,166 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}Send Email - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="page-header mb-4">
+    <h1 class="page-title">Send Email Campaign</h1>
+    <p class="page-subtitle">Send bulk emails to applicants</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-envelope me-2"></i>Compose Email</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin_mail') }}" id="emailForm">
+                    <div class="mb-4">
+                        <label class="form-label">Subject *</label>
+                        <input type="text" class="form-control" name="subject" required placeholder="Enter email subject">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Message *</label>
+                        <textarea class="form-control" name="message" rows="12" required placeholder="Write your message here...&#10;&#10;Tip: Keep it professional and personalized"></textarea>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Personalization tags: Use {{name}} for recipient name, {{internship}} for internship title
+                        </small>
+                    </div>
+                    
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary" id="sendBtn">
+                            <i class="fas fa-paper-plane me-2"></i>Send Email
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('emailForm').reset(); updateRecipientCount();">
+                            <i class="fas fa-redo me-2"></i>Reset
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4" style="position: sticky; top: 100px;">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-users me-2"></i>Select Recipients</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="searchApplicants" placeholder="Search applicants...">
+                </div>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="selectAll">
+                    <label class="form-check-label" for="selectAll" style="font-weight: 600; color:white;">
+                        Select All (<span id="totalCount">{{ applicants|length }}</span>)
+                    </label>
+                </div>
+                
+                <div style="max-height: 400px; overflow-y: auto; border: 1px solid var(--dark-border); border-radius: 8px; padding: 0.75rem; color:azure;">
+                    {% if applicants %}
+                    <form id="recipientsForm">
+                        {% for applicant in applicants %}
+                        <div class="form-check mb-2 applicant-item" data-name="{{ applicant.full_name.lower() }}" data-email="{{ applicant.email.lower() }}">
+                            <input class="form-check-input recipient-checkbox" type="checkbox" name="recipients" value="{{ applicant.id }}" id="applicant{{ applicant.id }}" form="emailForm">
+                            <label class="form-check-label" for="applicant{{ applicant.id }}" style="font-size: 0.9rem;">
+                                <div style="font-weight: 500;">{{ applicant.full_name }}</div>
+                                <small style="color: var(--text-muted);">{{ applicant.email }}</small>
+                                <div class="mt-1">
+                                    <small class="badge badge-primary">{{ applicant.internship.title[:30] }}...</small>
+                                </div>
+                            </label>
+                        </div>
+                        <hr style="border-color: var(--dark-border); margin: 0.75rem 0;">
+                        {% endfor %}
+                    </form>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-2x mb-2" style="color: var(--text-muted);"></i>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">No applicants available</p>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-3 p-3" style="background: var(--dark-surface); border-radius: 8px; border-left: 4px solid var(--primary);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span style="color: var(--text-secondary); font-weight: 600;">Selected:</span>
+                        <span id="selectedCount" style="color: var(--primary); font-size: 1.25rem; font-weight: 700;">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const checkboxes = document.querySelectorAll('.recipient-checkbox');
+    const selectAll = document.getElementById('selectAll');
+    const selectedCount = document.getElementById('selectedCount');
+    const searchInput = document.getElementById('searchApplicants');
+    const sendBtn = document.getElementById('sendBtn');
+    
+    function updateRecipientCount() {
+        const checked = document.querySelectorAll('.recipient-checkbox:checked').length;
+        selectedCount.textContent = checked;
+        selectAll.checked = checked === checkboxes.length && checkboxes.length > 0;
+        sendBtn.disabled = checked === 0;
+        if (checked === 0) {
+            sendBtn.classList.add('disabled');
+        } else {
+            sendBtn.classList.remove('disabled');
+        }
+    }
+    
+    selectAll.addEventListener('change', function() {
+        const visibleCheckboxes = document.querySelectorAll('.applicant-item:not([style*="display: none"]) .recipient-checkbox');
+        visibleCheckboxes.forEach(cb => cb.checked = this.checked);
+        updateRecipientCount();
+    });
+    
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateRecipientCount);
+    });
+    
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        document.querySelectorAll('.applicant-item').forEach(item => {
+            const name = item.dataset.name;
+            const email = item.dataset.email;
+            if (name.includes(searchTerm) || email.includes(searchTerm)) {
+                item.style.display = 'block';
+                item.nextElementSibling.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+                item.nextElementSibling.style.display = 'none';
+            }
+        });
+        updateRecipientCount();
+    });
+    
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+        const checked = document.querySelectorAll('.recipient-checkbox:checked').length;
+        if (checked === 0) {
+            e.preventDefault();
+            alert('Please select at least one recipient');
+            return false;
+        }
+        
+        if (!confirm(`Are you sure you want to send this email to ${checked} recipient(s)?`)) {
+            e.preventDefault();
+            return false;
+        }
+        
+        sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+        sendBtn.disabled = true;
+    });
+    
+    updateRecipientCount();
+</script>
+{% endblock %}

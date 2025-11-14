@@ -1,0 +1,472 @@
+
+{% extends "base.html" %}
+
+{% block title %}Apply for {{ internship.title }} - {{ settings.company_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Mobile Responsive Styles for Application Form */
+@media (max-width: 768px) {
+    /* Typography adjustments */
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 0.75rem;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        font-size: 0.7rem;
+    }
+
+    /* Internship Info Card */
+    .card[style*="linear-gradient"] h4 {
+        font-size: 1.15rem;
+    }
+
+    .card[style*="linear-gradient"] p {
+        font-size: 0.85rem;
+    }
+
+    .card[style*="linear-gradient"] i {
+        font-size: 0.8rem;
+    }
+
+    /* Card padding */
+    .card-body.p-5 {
+        padding: 2rem !important;
+    }
+
+    .card-body.p-4 {
+        padding: 1.5rem !important;
+    }
+
+    /* Form labels */
+    .form-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    /* Form inputs */
+    .form-control,
+    .form-control-lg {
+        font-size: 0.9rem !important;
+        padding: 0.7rem 1rem !important;
+    }
+
+    textarea.form-control,
+    textarea.form-control-lg {
+        font-size: 0.85rem !important;
+    }
+
+    .form-control::placeholder {
+        font-size: 0.85rem;
+    }
+
+    /* Small helper text */
+    small.text-muted {
+        font-size: 0.75rem;
+    }
+
+    /* Section headings with icons */
+    h5 i {
+        font-size: 0.9rem;
+    }
+
+    /* Buttons */
+    .btn-lg {
+        padding: 0.8rem 1.5rem !important;
+        font-size: 0.95rem !important;
+    }
+
+    .btn i {
+        font-size: 0.85rem;
+    }
+
+    /* Checkbox label */
+    .form-check-label {
+        font-size: 0.85rem;
+    }
+
+    /* Form sections spacing */
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    /* Text center content */
+    .text-center p {
+        font-size: 0.85rem;
+    }
+
+    /* Section padding */
+    .py-5 {
+        padding-top: 2.5rem !important;
+        padding-bottom: 2.5rem !important;
+    }
+
+    .py-3 {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+
+    /* Row gaps */
+    .row.g-3 {
+        --bs-gutter-y: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Even smaller for very small screens */
+    h2 {
+        font-size: 1.35rem;
+    }
+
+    h4 {
+        font-size: 1rem;
+    }
+
+    h5 {
+        font-size: 0.95rem;
+    }
+
+    p {
+        font-size: 0.85rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 0.7rem;
+    }
+
+    /* Internship Info Card */
+    .card[style*="linear-gradient"] h4 {
+        font-size: 1rem;
+    }
+
+    .card[style*="linear-gradient"] p {
+        font-size: 0.8rem;
+    }
+
+    .card[style*="linear-gradient"] i {
+        font-size: 0.75rem;
+    }
+
+    /* Card padding */
+    .card-body.p-5 {
+        padding: 1.5rem !important;
+    }
+
+    .card-body.p-4 {
+        padding: 1.25rem !important;
+    }
+
+    /* Form labels */
+    .form-label {
+        font-size: 0.8rem;
+    }
+
+    /* Form inputs */
+    .form-control,
+    .form-control-lg {
+        font-size: 0.85rem !important;
+        padding: 0.65rem 0.9rem !important;
+    }
+
+    textarea.form-control,
+    textarea.form-control-lg {
+        font-size: 0.8rem !important;
+        padding: 0.65rem 0.9rem !important;
+    }
+
+    .form-control::placeholder {
+        font-size: 0.8rem;
+    }
+
+    /* Small helper text */
+    small.text-muted {
+        font-size: 0.7rem;
+    }
+
+    /* Section headings with icons */
+    h5 {
+        font-size: 0.9rem;
+    }
+
+    h5 i {
+        font-size: 0.85rem;
+    }
+
+    /* Buttons */
+    .btn-lg {
+        padding: 0.75rem 1.25rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .btn i {
+        font-size: 0.8rem;
+    }
+
+    /* Checkbox */
+    .form-check-input {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .form-check-label {
+        font-size: 0.8rem;
+        line-height: 1.5;
+    }
+
+    /* Form sections spacing */
+    .mb-4 {
+        margin-bottom: 1.25rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 0.85rem !important;
+    }
+
+    .mb-2 {
+        margin-bottom: 0.5rem !important;
+    }
+
+    /* Text center content */
+    .text-center h2 {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .text-center p {
+        font-size: 0.8rem;
+    }
+
+    /* Section padding */
+    .py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .py-3 {
+        padding-top: 0.85rem !important;
+        padding-bottom: 0.85rem !important;
+    }
+
+    /* Row gaps */
+    .row.g-3 {
+        --bs-gutter-y: 0.65rem;
+    }
+
+    /* Button container */
+    .d-grid.gap-2 {
+        gap: 0.65rem !important;
+    }
+
+    /* Help section */
+    .mt-4 {
+        margin-top: 1.25rem !important;
+    }
+
+    /* Textarea rows adjustment */
+    #cover_letter {
+        rows: 5;
+    }
+}
+
+/* Landscape orientation for phones */
+@media (max-width: 768px) and (orientation: landscape) {
+    .card-body.p-5 {
+        padding: 1.75rem !important;
+    }
+
+    .py-5 {
+        padding-top: 2.25rem !important;
+        padding-bottom: 2.25rem !important;
+    }
+}
+
+/* Form focus states - maintain visibility */
+@media (max-width: 768px) {
+    .form-control:focus {
+        border-color: var(--secondary);
+        box-shadow: 0 0 0 0.2rem rgba(230, 126, 34, 0.25);
+    }
+}
+
+/* Required asterisk styling */
+@media (max-width: 576px) {
+    .text-danger {
+        font-size: 0.8rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<section class="py-3" style="background-color: var(--cream);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('internships') }}">Internships</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('internship_detail', slug=internship.slug) }}">{{ internship.title }}</a></li>
+                <li class="breadcrumb-item active">Apply</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Application Form -->
+<section class="py-5" style="background-color: var(--cream);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Internship Info Card -->
+                <div class="card border-0 mb-4" style="border-radius: 20px; background: linear-gradient(135deg, var(--primary), #1a252f); color: white;">
+                    <div class="card-body p-4">
+                        <h4 class="mb-2" style="color:white;">{{ internship.title }}</h4>
+                        <p class="mb-0 opacity-75">
+                            <i class="fas fa-map-marker-alt me-2"></i>{{ internship.location }}
+                            <span class="ms-3"><i class="fas fa-calendar-alt me-2"></i>Deadline: {{ internship.deadline.strftime('%B %d, %Y') }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Application Form Card -->
+                <div class="card border-0" style="border-radius: 20px; box-shadow: 0 5px 25px rgba(0,0,0,0.1);">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h2 class="mb-2">Submit Your Application</h2>
+                            <p class="text-muted">Fill in your details to apply for this internship</p>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('apply', slug=internship.slug) }}" enctype="multipart/form-data" id="applicationForm">
+                            <!-- Personal Information -->
+                            <div class="mb-4">
+                                <h5 class="mb-3" style="color: var(--secondary);">
+                                    <i class="fas fa-user me-2"></i>Personal Information
+                                </h5>
+
+                                <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <label for="full_name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control form-control-lg" id="full_name" name="full_name" required style="border-radius: 10px; border: 2px solid #e0e0e0;">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control form-control-lg" id="email" name="email" required style="border-radius: 10px; border: 2px solid #e0e0e0;">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control form-control-lg" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="10-digit number" style="border-radius: 10px; border: 2px solid #e0e0e0;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Resume Upload -->
+                            <div class="mb-4">
+                                <h5 class="mb-3" style="color: var(--secondary);">
+                                    <i class="fas fa-file-upload me-2"></i>Resume/CV
+                                </h5>
+
+                                <div class="mb-3">
+                                    <label for="resume" class="form-label">Upload Resume <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control form-control-lg" id="resume" name="resume" required accept=".pdf,.doc,.docx" style="border-radius: 10px; border: 2px solid #e0e0e0;">
+                                    <small class="text-muted">Accepted formats: PDF, DOC, DOCX (Max 16MB)</small>
+                                </div>
+                            </div>
+
+                            <!-- Additional Information -->
+                            <div class="mb-4">
+                                <h5 class="mb-3" style="color: var(--secondary);">
+                                    <i class="fas fa-info-circle me-2"></i>Additional Information
+                                </h5>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="linkedin_url" class="form-label">LinkedIn Profile</label>
+                                        <input type="url" class="form-control form-control-lg" id="linkedin_url" name="linkedin_url" placeholder="https://linkedin.com/in/yourprofile" style="border-radius: 10px; border: 2px solid #e0e0e0;">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="portfolio_url" class="form-label">Portfolio/Website</label>
+                                        <input type="url" class="form-control form-control-lg" id="portfolio_url" name="portfolio_url" placeholder="https://yourportfolio.com" style="border-radius: 10px; border: 2px solid #e0e0e0;">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="cover_letter" class="form-label">Cover Letter / Why do you want this internship?</label>
+                                        <textarea class="form-control form-control-lg" id="cover_letter" name="cover_letter" rows="6" placeholder="Tell us why you're the perfect fit for this role..." style="border-radius: 10px; border: 2px solid #e0e0e0;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Terms -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        I agree that all the information provided is accurate and I consent to {{ settings.company_name }} processing my application.
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg" style="padding: 1rem; font-size: 1.1rem; border-radius: 10px;">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit Application
+                                </button>
+                                <a href="{{ url_for('internship_detail', slug=internship.slug) }}" class="btn btn-outline-secondary btn-lg" style="border-radius: 10px;">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Internship
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Help Section -->
+                <div class="text-center mt-4">
+                    <p class="text-muted">
+                        Having trouble? <a href="{{ url_for('contact') }}" style="color: var(--secondary); text-decoration: none; font-weight: 600;">Contact our support team</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Form validation and enhancement
+document.getElementById('applicationForm').addEventListener('submit', function(e) {
+    const fileInput = document.getElementById('resume');
+    const file = fileInput.files[0];
+
+    if (file) {
+        const fileSize = file.size / 1024 / 1024; // in MB
+        if (fileSize > 16) {
+            e.preventDefault();
+            alert('File size must be less than 16MB');
+            return false;
+        }
+    }
+});
+</script>
+{% endblock %}

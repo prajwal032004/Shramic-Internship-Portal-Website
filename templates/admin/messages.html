@@ -1,0 +1,109 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}Messages - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="page-header mb-4">
+    <h1 class="page-title">Contact Messages</h1>
+    <p class="page-subtitle">Manage inquiries and messages from visitors</p>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if messages.items %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th width="5%"></th>
+                        <th>From</th>
+                        <th>Subject</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages.items %}
+                    <tr style="{% if not message.is_read %}background: rgba(99, 102, 241, 0.05);{% endif %}">
+                        <td>
+                            {% if not message.is_read %}
+                            <i class="fas fa-circle" style="color: var(--primary); font-size: 0.5rem;"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div>
+                                <div style="font-weight: {% if not message.is_read %}700{% else %}500{% endif %};">{{ message.name }}</div>
+                                <small style="color: var(--text-muted);">
+                                    <i class="fas fa-envelope me-1"></i>{{ message.email }}
+                                </small>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: {% if not message.is_read %}600{% else %}400{% endif %};">
+                                {{ message.subject or 'No Subject' }}
+                            </div>
+                            <small style="color: var(--text-secondary);">
+                                {{ message.message[:80] }}{% if message.message|length > 80 %}...{% endif %}
+                            </small>
+                        </td>
+                        <td>
+                            <div>{{ message.created_at.strftime('%b %d, %Y') }}</div>
+                            <small style="color: var(--text-muted);">{{ message.created_at.strftime('%I:%M %p') }}</small>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url_for('view_message', id=message.id) }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-eye me-1"></i>View
+                                </a>
+                                <a href="mailto:{{ message.email }}" class="btn btn-outline-success">
+    <i class="fas fa-reply me-1"></i>Reply
+</a>
+
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if messages.pages > 1 %}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if messages.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin_messages', page=messages.prev_num) }}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in messages.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == messages.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('admin_messages', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if messages.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin_messages', page=messages.next_num) }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-inbox fa-4x mb-4" style="color: var(--text-muted);"></i>
+            <h4 style="color: var(--text-secondary);">No Messages Yet</h4>
+            <p style="color: var(--text-muted);">Messages from your contact form will appear here</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

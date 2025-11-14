@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section py-5" style="background: linear-gradient(135deg, #FFF8F0 0%, #F5EBE0 100%); min-height: 85vh; display: flex; align-items: center;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0 fade-in-up">
+                <h1 class="display-3 fw-bold mb-4" style="line-height: 1.2;">Launch Your Career with <span style="color: var(--secondary);">{{ settings.company_name }}</span></h1>
+                <p class="lead mb-4" style="font-size: 1.25rem; color: var(--text-light);">{{ settings.tagline }}</p>
+                <p class="mb-4" style="font-size: 1.1rem;">Discover exciting internship opportunities that match your passion and skills. Join innovative teams and build the future.</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{{ url_for('internships') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-search me-2"></i>Explore Internships
+                    </a>
+                    <a href="#featured" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-arrow-down me-2"></i>Learn More
+                    </a>
+                </div>
+
+                <!-- Stats -->
+                <div class="row mt-5">
+                    <div class="col-4">
+                        <h3 class="fw-bold" style="color: var(--secondary);">1 year</h3>
+                        <p class="mb-0" style="color: var(--text-light);">Since Opened</p>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="fw-bold" style="color: var(--secondary);">8</h3>
+                        <p class="mb-0" style="color: var(--text-light);">Employees</p>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="fw-bold" style="color: var(--secondary);">100%</h3>
+                        <p class="mb-0" style="color: var(--text-light);">Success Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 fade-in-up">
+                <img src="{{ url_for('static', filename='img/hero.png') }}" alt="Career Launch" class="img-fluid" style="filter: drop-shadow(0 10px 30px rgba(0,0,0,0.1));">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5" style="background-color: var(--white);">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Why Choose {{ settings.company_name }}?</h2>
+            <p class="section-subtitle">We connect talent with opportunity</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center p-4 border-0">
+                    <div class="mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background: linear-gradient(135deg, #E67E22, #D4A574); border-radius: 50%;">
+                            <i class="fas fa-briefcase fa-2x text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="mb-3">Quality Internships</h5>
+                    <p class="text-muted">Curated opportunities from top companies across various industries.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center p-4 border-0">
+                    <div class="mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background: linear-gradient(135deg, #2C3E50, #34495E); border-radius: 50%;">
+                            <i class="fas fa-user-graduate fa-2x text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="mb-3">Career Growth</h5>
+                    <p class="text-muted">Hands-on experience and mentorship to accelerate your professional journey.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center p-4 border-0">
+                    <div class="mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background: linear-gradient(135deg, #27AE60, #2ECC71); border-radius: 50%;">
+                            <i class="fas fa-rocket fa-2x text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="mb-3">Fast Placement</h5>
+                    <p class="text-muted">Quick application process and timely responses from hiring teams.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 text-center p-4 border-0">
+                    <div class="mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background: linear-gradient(135deg, #3498DB, #2980B9); border-radius: 50%;">
+                            <i class="fas fa-handshake fa-2x text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="mb-3">Continuous Support</h5>
+                    <p class="text-muted">Dedicated team to guide you throughout your internship journey.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Internships -->
+<section id="featured" class="py-5" style="background-color: var(--cream);">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Featured Internships</h2>
+            <p class="section-subtitle">Start your journey with these exciting opportunities</p>
+        </div>
+
+        {% if internships %}
+        <div class="row g-4">
+            {% for internship in internships %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 hover-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge" style="background-color: var(--secondary); padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                {{ internship.location_type|capitalize }}
+                            </span>
+                            <span class="text-muted"><i class="far fa-clock me-1"></i>{{ internship.duration or 'Flexible' }}</span>
+                        </div>
+
+                        <h5 class="card-title mb-3">{{ internship.title }}</h5>
+                        <p class="card-text text-muted mb-3">{{ internship.description[:120] }}...</p>
+
+                        <div class="mb-3">
+                            <small class="text-muted"><i class="fas fa-map-marker-alt me-2"></i>{{ internship.location }}</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <small class="text-muted"><i class="fas fa-calendar-alt me-2"></i>Apply by: {{ internship.deadline.strftime('%b %d, %Y') }}</small>
+                        </div>
+
+                        {% if internship.stipend %}
+                        <div class="mb-3">
+                            <small class="fw-bold" style="color: var(--success);"><i class="fas fa-rupee-sign me-1"></i>{{ internship.stipend }}</small>
+                        </div>
+                        {% endif %}
+
+                        <a href="{{ url_for('internship_detail', slug=internship.slug) }}" class="btn btn-outline-primary w-100 mt-2">
+                            View Details <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{{ url_for('internships') }}" class="btn btn-primary btn-lg">
+                View All Internships <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-briefcase fa-4x mb-4" style="color: var(--accent);"></i>
+            <h4>No internships available at the moment</h4>
+            <p class="text-muted">Check back soon for new opportunities!</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-5" style="background-color: var(--white);">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Simple steps to your dream internship</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="position-relative mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; background: linear-gradient(135deg, #E67E22, #D4A574); border-radius: 50%; position: relative;">
+                        <span class="display-4 text-white fw-bold">1</span>
+                    </div>
+                </div>
+                <h5 class="mb-3">Browse Opportunities</h5>
+                <p class="text-muted">Explore our curated list of internships from top companies.</p>
+            </div>
+
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="position-relative mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; background: linear-gradient(135deg, #2C3E50, #34495E); border-radius: 50%;">
+                        <span class="display-4 text-white fw-bold">2</span>
+                    </div>
+                </div>
+                <h5 class="mb-3">Submit Application</h5>
+                <p class="text-muted">Fill out a simple form and upload your resume.</p>
+            </div>
+
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="position-relative mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; background: linear-gradient(135deg, #27AE60, #2ECC71); border-radius: 50%;">
+                        <span class="display-4 text-white fw-bold">3</span>
+                    </div>
+                </div>
+                <h5 class="mb-3">Get Reviewed</h5>
+                <p class="text-muted">Our team reviews and forwards your profile to employers.</p>
+            </div>
+
+            <div class="col-lg-3 col-md-6 text-center">
+                <div class="position-relative mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; background: linear-gradient(135deg, #3498DB, #2980B9); border-radius: 50%;">
+                        <span class="display-4 text-white fw-bold">4</span>
+                    </div>
+                </div>
+                <h5 class="mb-3">Start Your Journey</h5>
+                <p class="text-muted">Get hired and begin your exciting career journey!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary) 0%, #1a252f 100%); color: white;">
+    <div class="container py-5 text-center">
+        <h2 class="display-5 fw-bold mb-4" style="color: white;">Ready to Start Your Career?</h2>
+        <p class="lead mb-4">Join thousands of successful interns who launched their careers with us</p>
+        <a href="{{ url_for('internships') }}" class="btn btn-lg" style="background-color: var(--secondary); color: white; padding: 1rem 3rem; border-radius: 50px; font-weight: 600;">
+            Apply for Internship <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+    </div>
+</section>
+
+<style>
+    .hover-card {
+        transition: all 0.3s ease;
+    }
+
+    .hover-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,479 @@
+{% extends "base.html" %}
+
+{% block title %}{{ internship.title }} - {{ settings.company_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Mobile Responsive Styles for Internship Detail Page */
+@media (max-width: 768px) {
+    /* Typography adjustments */
+    .display-5 {
+        font-size: 1.75rem !important;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 0.8rem;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        font-size: 0.75rem;
+    }
+
+    /* Badges */
+    .badge {
+        padding: 0.4rem 0.8rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    /* Key Info Cards */
+    .row.g-3 .col-md-6 {
+        font-size: 0.85rem;
+    }
+
+    .row.g-3 .col-md-6 small {
+        font-size: 0.75rem;
+    }
+
+    .row.g-3 .col-md-6 strong {
+        font-size: 0.9rem;
+    }
+
+    .row.g-3 .col-md-6 .me-3 {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .row.g-3 .col-md-6 .me-3 i {
+        font-size: 0.9rem;
+    }
+
+    /* Description text */
+    .card-body p {
+        font-size: 0.9rem !important;
+        line-height: 1.6 !important;
+    }
+
+    /* Skills badges */
+    .d-flex.flex-wrap.gap-2 .badge {
+        padding: 0.4rem 0.7rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* Buttons */
+    .btn-lg {
+        padding: 0.8rem 2rem !important;
+        font-size: 0.95rem !important;
+    }
+
+    .btn {
+        font-size: 0.85rem;
+    }
+
+    .btn i {
+        font-size: 0.85rem;
+    }
+
+    /* Card padding */
+    .card-body {
+        padding: 1.5rem !important;
+    }
+
+    .card-body.p-5 {
+        padding: 2rem !important;
+    }
+
+    .card-body.p-4 {
+        padding: 1.5rem !important;
+    }
+
+    /* Section padding */
+    .py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .py-3 {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+
+    /* Margins */
+    .mb-4 {
+        margin-bottom: 1rem !important;
+    }
+
+    .mb-5 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 0.75rem !important;
+    }
+
+    /* Icons in headings */
+    h4 i, h5 i {
+        font-size: 0.9rem;
+    }
+
+    /* Share buttons */
+    .d-flex.gap-2 .btn {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.85rem;
+    }
+
+    /* Tips list */
+    ul.list-unstyled li {
+        font-size: 0.85rem;
+    }
+
+    ul.list-unstyled li i {
+        font-size: 0.75rem;
+    }
+
+    /* Quick Tips Card */
+    .card.border-0[style*="linear-gradient"] h5 {
+        font-size: 1rem;
+    }
+
+    /* Contact card */
+    .card-body h5 {
+        font-size: 1rem;
+    }
+
+    .card-body p {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Even smaller for very small screens */
+    .display-5 {
+        font-size: 1.5rem !important;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h4 {
+        font-size: 1rem;
+    }
+
+    h5 {
+        font-size: 0.95rem;
+    }
+
+    p {
+        font-size: 0.85rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 0.75rem;
+    }
+
+    /* Badges */
+    .badge {
+        padding: 0.35rem 0.7rem !important;
+        font-size: 0.7rem !important;
+    }
+
+    /* Key Info Cards */
+    .row.g-3 .col-md-6 {
+        font-size: 0.8rem;
+    }
+
+    .row.g-3 .col-md-6 small {
+        font-size: 0.7rem;
+    }
+
+    .row.g-3 .col-md-6 strong {
+        font-size: 0.85rem;
+    }
+
+    .row.g-3 .col-md-6 .me-3 {
+        width: 35px !important;
+        height: 35px !important;
+    }
+
+    .row.g-3 .col-md-6 .me-3 i {
+        font-size: 0.8rem;
+    }
+
+    /* Description */
+    .card-body p {
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Skills badges */
+    .d-flex.flex-wrap.gap-2 .badge {
+        padding: 0.35rem 0.6rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    /* Buttons */
+    .btn-lg {
+        padding: 0.7rem 1.5rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .btn {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn i {
+        font-size: 0.8rem;
+    }
+
+    /* Card padding */
+    .card-body {
+        padding: 1.25rem !important;
+    }
+
+    .card-body.p-5 {
+        padding: 1.5rem !important;
+    }
+
+    .card-body.p-4 {
+        padding: 1.25rem !important;
+    }
+
+    /* Icons in headings */
+    h4 i, h5 i {
+        font-size: 0.85rem;
+    }
+
+    /* Share buttons */
+    .d-flex.gap-2 .btn {
+        padding: 0.45rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    /* Tips list */
+    ul.list-unstyled li {
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem !important;
+    }
+
+    ul.list-unstyled li i {
+        font-size: 0.7rem;
+    }
+
+    /* Sidebar cards spacing */
+    .col-lg-4 .card {
+        margin-bottom: 1rem !important;
+    }
+}
+
+/* Landscape orientation for phones */
+@media (max-width: 768px) and (orientation: landscape) {
+    .display-5 {
+        font-size: 1.6rem !important;
+    }
+
+    .card-body.p-5 {
+        padding: 1.75rem !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<section class="py-3" style="background-color: var(--cream);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('internships') }}">Internships</a></li>
+                <li class="breadcrumb-item active">{{ internship.title }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Internship Detail -->
+<section class="py-5" style="background-color: var(--cream);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card border-0 mb-4" style="border-radius: 20px; box-shadow: 0 5px 25px rgba(0,0,0,0.1);">
+                    <div class="card-body p-5">
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div>
+                                <h1 class="display-5 fw-bold mb-3">{{ internship.title }}</h1>
+                                <div class="d-flex flex-wrap gap-3 mb-3">
+                                    <span class="badge" style="background-color: var(--secondary); padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                                        <i class="fas fa-{{ 'home' if internship.location_type == 'remote' else 'building' if internship.location_type == 'onsite' else 'laptop-house' }} me-2"></i>{{ internship.location_type|capitalize }}
+                                    </span>
+                                    {% if internship.duration %}
+                                    <span class="badge bg-light text-dark" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                                        <i class="far fa-clock me-2"></i>{{ internship.duration }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Key Info -->
+                        <div class="row g-3 mb-4 p-4" style="background-color: var(--cream); border-radius: 15px;">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3" style="width: 50px; height: 50px; background-color: var(--white); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-map-marker-alt" style="color: var(--secondary);"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Location</small>
+                                        <strong>{{ internship.location }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3" style="width: 50px; height: 50px; background-color: var(--white); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-calendar-alt" style="color: var(--secondary);"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Application Deadline</small>
+                                        <strong>{{ internship.deadline.strftime('%B %d, %Y') }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if internship.stipend %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3" style="width: 50px; height: 50px; background-color: var(--white); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-rupee-sign" style="color: var(--success);"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Stipend</small>
+                                        <strong style="color: var(--success);">{{ internship.stipend }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3" style="width: 50px; height: 50px; background-color: var(--white); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-user-clock" style="color: var(--primary);"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Posted On</small>
+                                        <strong>{{ internship.created_at.strftime('%B %d, %Y') }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-5">
+                            <h4 class="mb-3"><i class="fas fa-info-circle me-2" style="color: var(--secondary);"></i>About This Internship</h4>
+                            <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-dark);">{{ internship.description }}</p>
+                        </div>
+
+                        <!-- Skills Required -->
+                        <div class="mb-5">
+                            <h4 class="mb-3"><i class="fas fa-star me-2" style="color: var(--secondary);"></i>Required Skills</h4>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for skill in internship.skills.split(',') %}
+                                <span class="badge bg-light text-dark" style="padding: 0.6rem 1rem; font-size: 0.95rem; border: 1px solid #e0e0e0;">
+                                    {{ skill.strip() }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <div class="text-center pt-4">
+                            <a href="{{ url_for('apply', slug=internship.slug) }}" class="btn btn-primary btn-lg" style="padding: 1rem 3rem; font-size: 1.1rem;">
+                                <i class="fas fa-paper-plane me-2"></i>Apply Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Share Card -->
+                <div class="card border-0 mb-4" style="border-radius: 20px; box-shadow: 0 5px 25px rgba(0,0,0,0.1);">
+                    <div class="card-body p-4">
+                        <h5 class="mb-3"><i class="fas fa-share-alt me-2" style="color: var(--secondary);"></i>Share This Opportunity</h5>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url }}" target="_blank" class="btn btn-outline-primary flex-fill" style="border-radius: 10px;">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://twitter.com/intent/tweet?text={{ internship.title }}&url={{ request.url }}" target="_blank" class="btn btn-outline-primary flex-fill" style="border-radius: 10px;">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" class="btn btn-outline-primary flex-fill" style="border-radius: 10px;">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://api.whatsapp.com/send?text={{ internship.title }} {{ request.url }}" target="_blank" class="btn btn-outline-primary flex-fill" style="border-radius: 10px;">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <button onclick="copyToClipboard()" class="btn btn-outline-primary flex-fill" style="border-radius: 10px;">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Tips Card -->
+                <div class="card border-0 mb-4" style="border-radius: 20px; background: linear-gradient(135deg, var(--secondary), #D4A574); color: white;">
+                    <div class="card-body p-4">
+                        <h5 class="mb-3"><i class="fas fa-lightbulb me-2"></i>Application Tips</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2"><i class="fas fa-check-circle me-2"></i>Update your resume</li>
+                            <li class="mb-2"><i class="fas fa-check-circle me-2"></i>Highlight relevant skills</li>
+                            <li class="mb-2"><i class="fas fa-check-circle me-2"></i>Write a strong cover letter</li>
+                            <li class="mb-2"><i class="fas fa-check-circle me-2"></i>Double-check your information</li>
+                            <li><i class="fas fa-check-circle me-2"></i>Apply before deadline</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Card -->
+                <div class="card border-0" style="border-radius: 20px; box-shadow: 0 5px 25px rgba(0,0,0,0.1);">
+                    <div class="card-body p-4">
+                        <h5 class="mb-3"><i class="fas fa-question-circle me-2" style="color: var(--secondary);"></i>Need Help?</h5>
+                        <p class="mb-3">Have questions about this internship?</p>
+                        <a href="{{ url_for('contact') }}" class="btn btn-outline-primary w-100" style="border-radius: 10px;">
+                            <i class="fas fa-envelope me-2"></i>Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function copyToClipboard() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        alert('Link copied to clipboard!');
+    });
+}
+</script>
+{% endblock %}
