@@ -134,10 +134,37 @@ def get_site_settings():
 @app.route('/health')
 def health_check():
     """Health check endpoint for serverless"""
-    return jsonify({
+    status = {
         'status': 'healthy',
-        'database': 'connected' if db.engine else 'disconnected'
-    }), 200
+        'database': 'unknown',
+        'templates_path': app.template_folder,
+        'static_path': app.static_folder,
+        'database_url': 'configured' if app.config.get('SQLALCHEMY_DATABASE_URI') else 'missing'
+    }
+    
+    try:
+        db.engine.connect()
+        status['database'] = 'connected'
+    except Exception as e:
+        status['database'] = f'error: {str(e)}'
+    
+    return jsonify(status), 200
+
+@app.route('/debug-info')
+def debug_info():
+    """Debug information endpoint - REMOVE IN PRODUCTION"""
+    if os.environ.get('FLASK_ENV') != 'production':
+        import sys
+        return jsonify({
+            'python_version': sys.version,
+            'flask_version': Flask.__version__,
+            'root_path': app.root_path,
+            'template_folder': app.template_folder,
+            'static_folder': app.static_folder,
+            'config': {k: '***' if 'PASSWORD' in k or 'SECRET' in k else v 
+                      for k, v in app.config.items() if isinstance(v, (str, int, bool))}
+        }), 200
+    return 'Debug info disabled in production', 403
 
 @app.route('/')
 def index():
@@ -709,17 +736,49 @@ def admin_settings():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+@app.route('/favicon.ico')
+def favicon():
+    try:
+        return send_from_directory(os.path.join(app.root_path, '..', 'static'),
+                                   'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    except:
+        # Return empty response if favicon not found
+        return '', 204
+
 # ======================= ERROR HANDLERS =======================
 
 @app.errorhandler(404)
 def not_found(e):
-    settings = get_site_settings()
-    return render_template('errors/404.html', settings=settings), 404
+    try:
+        settings = get_site_settings()
+        return render_template('errors/404.html', settings=settings), 404
+    except:
+        return jsonify({'error': 'Page not found'}), 404
 
 @app.errorhandler(500)
 def internal_error(e):
-    settings = get_site_settings()
-    return render_template('errors/500.html', settings=settings), 500
+    try:
+        settings = get_site_settings()
+        return render_template('errors/500.html', settings=settings), 500
+    except:
+        return jsonify({'error': 'Internal server error', 'message': str(e)}), 500
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Log the error
+    print(f"Unhandled exception: {str(e)}")
+    import traceback
+    traceback.print_exc()
+    
+    # Return JSON for API routes, HTML for web routes
+    if request.path.startswith('/api/') or request.path.startswith('/admin/'):
+        return jsonify({'error': 'An error occurred', 'message': str(e)}), 500
+    
+    try:
+        settings = get_site_settings()
+        return render_template('errors/500.html', settings=settings), 500
+    except:
+        return jsonify({'error': 'Internal server error', 'message': str(e)}), 500
 
 # ======================= INITIALIZATION =======================
 
@@ -756,6 +815,16 @@ def init_db():
 @app.before_request
 def initialize_database():
     if not hasattr(app, 'db_initialized'):
-        with app.app_context():
-            init_db()
-            app.db_initialized = True
+        try:
+            with app.app_context():
+                # Test database connection
+                db.engine.connect()
+                init_db()
+                app.db_initialized = True
+                print("Database initialized successfully on first request")
+        except Exception as e:
+            print(f"Database initialization error: {e}")
+            import traceback
+            traceback.print_exc()
+            # Don't block the request, but log the error
+            app.db_initialized = False
